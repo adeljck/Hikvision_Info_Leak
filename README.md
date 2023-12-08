@@ -11,14 +11,10 @@
  **参数**
 
 ```shell
-  -c	check is vuln(default)
-  -e	reverse a shell
-  -p string
-    	reverse port
-  -r string
-    	reverse  ip
+  -c    check is vuln(default)
+  -e    reverse a shell
   -u string
-    	target url
+        target url
 ```
 
 **检测**
