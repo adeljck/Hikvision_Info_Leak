@@ -20,7 +20,7 @@
 **检测**
 
 ```shell
-./Hikvision_Info_Leak -c -u http://xxxx.xx.xxx.xx
+./Hikvision_Info_Leak -u http://xxxx.xx.xxx.xx
 ```
 
 **利用**
@@ -31,6 +31,9 @@
 
 ## 注意
 
-1.本工具的利用模块需要结合海康密码解密工具
+
+1.加入了自动解密.感谢棱角社区的在线解密功能(https://forum.ywhack.com/decrypt.php)
+
+2.自动解密失败会用到的工具
 
 https://github.com/wafinfo/Hikvision
