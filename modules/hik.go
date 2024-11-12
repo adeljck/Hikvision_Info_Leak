@@ -142,7 +142,7 @@ func (h *Hik) extractRedisInfo() {
 			h.redisPasswordEncrypted = strings.SplitN(v, "=", 2)[1]
 			continue
 		}
-		if strings.Contains(v, "portalcache") && strings.Contains(v, "port") {
+		if strings.Contains(v, "portalcache") && strings.Contains(v, ".port") {
 			h.redisPort = strings.Split(v, "=")[1]
 			continue
 		}
