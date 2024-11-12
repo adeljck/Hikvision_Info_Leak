@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"bufio"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/sha256"
@@ -9,9 +10,33 @@ import (
 	"golang.org/x/crypto/pbkdf2"
 	"net"
 	"net/url"
+	"os"
 	"strconv"
 )
 
+func LoadFile(Path string) ([]string, error) {
+	var lines []string
+
+	// 打开文件
+	file, err := os.Open(Path)
+	if err != nil {
+		return nil, fmt.Errorf("Can Not Open File: %s, ERROR: %v", Path, err)
+	}
+	defer file.Close() // 确保在函数结束时关闭文件
+
+	// 创建Scanner
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text()) // 将每一行添加到切片中
+	}
+
+	// 检查扫描过程中是否发生错误
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("Read File Error: %v", err)
+	}
+
+	return lines, nil // 返回包含所有行的切片
+}
 func UrlChecker(target string) (string, string, bool) {
 	Schema, err := url.ParseRequestURI(target)
 	if err != nil {
